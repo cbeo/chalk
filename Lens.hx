@@ -11,7 +11,7 @@ abstract Lens<T,F>(LensType<T,F>) from LensType<T,F> to LensType<T,F> {
     this = l;
   }
 
-  @:op(A * B)
+  //  @:op(A * B)
   public function compose<G>(other:Lens<F,G>): Lens<T,G> {
     return { get : (t:T) -> other.get( this.get( t ) ),
               set : (g:G,t:T) -> this.set( other.set( g, this.get( t ) ), t )
@@ -25,7 +25,7 @@ abstract Lens<T,F>(LensType<T,F>) from LensType<T,F> to LensType<T,F> {
   }
 
   @:op(a.b)
-  public function setOp<G>(field:String, val:G): (T -> T) {
+  public function setOp<G>(field:String, val:G): StateTransform<T> {
     var l: Lens<T,G> = dotOp(field);
     return (t:T) -> l.set(val, t);
   }

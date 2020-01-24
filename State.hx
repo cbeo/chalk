@@ -10,7 +10,7 @@ class ConcreteState<T> {
     //   v.render(); // TODO handle "Err(...)" return values
   }
 
-  public function write(tform: T -> T) {
+  public function write(tform: StateTransform<T>) {
     try {
 
       var newState = tform(state);
@@ -46,6 +46,12 @@ abstract State<T>(ConcreteState<T>) {
   @:op(a.b)
   public function field<F>(name:String):Lens<T,F> {
     return Lens.on(name);
+  }
+
+  @:op(a.b)
+  public function setField<F>(name:String, val:F):StateTransform<T> {
+    var l: Lens<T,F> = field(name);
+    return (t:T) -> l.set(val,t);
   }
 
 }
