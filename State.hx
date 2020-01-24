@@ -48,11 +48,5 @@ abstract State<T>(ConcreteState<T>) {
     return Lens.on(name);
   }
 
-  @:op(a.b)
-  public function setField<F>(name:String, val:F):StateTransform<T> {
-    var l: Lens<T,F> = field(name);
-    return (t:T) -> l.set(val,t);
-  }
-
 }
 
