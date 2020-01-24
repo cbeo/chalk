@@ -1,37 +1,69 @@
 package;
 
-import haxe.ds.Option;
-
 class ConcreteState<T> {
   var state:T;
+  //  var views:Array<View>;
 
-  function updateViews() {
+  function renderViews(s:T) {
+    trace('rendering views...');
+    // for (v in view)
+    //   v.render(); // TODO handle "Err(...)" return values
   }
 
-  public function fields(name:String):Option<Any> {
-    return if (Reflect.hasField(state,name) || Reflect.hasField(state,"get_"+name))
-      Some(Reflect.getProperty(state,name))
-      else None;
+  public function read<F>(lens:Lens<T,F>):F {
+    return lens.get(state);
   }
 
-  public function checkout(fn:T -> Void) {
-    fn(state);
-    updateViews();
+  public function write<F>(lens:Lens<T,F>, val:F) : F {
+    try {
+
+      var newState = lens.set(val,state);
+      renderViews(newState);
+      state = newState;
+      return val;
+
+    } catch (e:Dynamic) {
+
+      trace('Error on update: $e');
+      trace('Restoring from last good state');
+      renderViews(state);
+      return lens.get(state);
+
+    }
   }
 
-  public function new(t) {
+  public inline function new(t) {
     state = t;
   }
 }
 
-@:forward(update,field);
-abstract State<T>(ConcreteState<T>) from ConcreteState to ConcreteState {
+@:forward(read,write)
+abstract State<T>(ConcreteState<T>) {
 
   inline public function new(t:T) {
     this = new ConcreteState(t);
   }
 
-  @:op(a.b) public function fieldRead(name:String) {
-    return this.field(name);
+  @:from
+  static public function from<T>(t:T) {
+    return new State(t);
   }
+
+  @:op(a.b)
+  public function field<F>(name:String):Lens<T,F> {
+    return Lens.on(name);
+  }
+
 }
+
+
+  // @:op(a.b) public function fieldRead<F>(name:String):F {
+  //   var lens : Lens<T,F> = Lens.on(name);
+  //   return this.read( lens );
+  // }
+
+  // @:op(a.b) public function writeField<F>(name:String, f:F) {
+  //   var lens : Lens<T,F> = Lens.on(name);
+  //   return this.write(lens, f);
+  // }
+
