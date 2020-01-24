@@ -24,6 +24,12 @@ abstract Lens<T,F>(LensType<T,F>) from LensType<T,F> to LensType<T,F> {
     return compose(other);
   }
 
+  @:op(a.b)
+  public function setOp<G>(field:String, val:G): (T -> T) {
+    var l: Lens<T,G> = dotOp(field);
+    return (t:T) -> l.set(val, t);
+  }
+
   public static function on<T1,F1>(field:String): Lens<T1,F1> {
     var get = (o:T1) -> (Reflect.field(o, field) : F1);
     var set = (f:F1,o:T1) ->

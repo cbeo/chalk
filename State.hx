@@ -1,7 +1,7 @@
 package;
 
 class ConcreteState<T> {
-  var state:T;
+  public var state(default,null):T;
   //  var views:Array<View>;
 
   function renderViews(s:T) {
@@ -10,24 +10,18 @@ class ConcreteState<T> {
     //   v.render(); // TODO handle "Err(...)" return values
   }
 
-  public function read<F>(lens:Lens<T,F>):F {
-    return lens.get(state);
-  }
-
-  public function write<F>(lens:Lens<T,F>, val:F) : F {
+  public function write(tform: T -> T) {
     try {
 
-      var newState = lens.set(val,state);
+      var newState = tform(state);
       renderViews(newState);
       state = newState;
-      return val;
 
     } catch (e:Dynamic) {
 
       trace('Error on update: $e');
       trace('Restoring from last good state');
       renderViews(state);
-      return lens.get(state);
 
     }
   }
@@ -37,7 +31,7 @@ class ConcreteState<T> {
   }
 }
 
-@:forward(read,write)
+@:forward(read,write,state)
 abstract State<T>(ConcreteState<T>) {
 
   inline public function new(t:T) {
@@ -55,15 +49,4 @@ abstract State<T>(ConcreteState<T>) {
   }
 
 }
-
-
-  // @:op(a.b) public function fieldRead<F>(name:String):F {
-  //   var lens : Lens<T,F> = Lens.on(name);
-  //   return this.read( lens );
-  // }
-
-  // @:op(a.b) public function writeField<F>(name:String, f:F) {
-  //   var lens : Lens<T,F> = Lens.on(name);
-  //   return this.write(lens, f);
-  // }
 
