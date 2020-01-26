@@ -187,6 +187,30 @@ class AttribExtensions {
     case ElementAttribute(name, value): node.setAttribute(name, value);
     }
   }
+
+  public static function removeFrom(attrib:Attrib, node: js.html.Elment) {
+    switch (attrib) {
+    case EventHandlerAttribute(event,handler): node.removeEventListener(event, handler);
+    case ElementAttribute(name,_): node.removeAttribute(name)
+    }
+  }
+
+  public static function sameNameAs(a1: Attrib, a2: Attrib) : Bool {
+    return switch ([a1,a2]) {
+    case [EventHandlerAttribute(e1,_), EventHandlerAttribute(e2,_)]: e1 == e2;
+    case [ElementAttribute(n1,_), ElementAttribute(n2,_)]: n1 == n2;
+    default: false;
+    };
+  }
+
+  public static function equals(a1: Attrib, a2: Attrib): Bool {
+    return switch ([a1,a2]) {
+    case [EventHandlerAttribute(e1,h1), EventHandlerAttribute(e2,h2)]:  e1 == e2 && h1 == h2;
+    case [ElementAttribute(n1,s1), ElementAttribute(n2,s2)]: n1 == n2 && s1 == s2;
+    default: false;
+    };
+  }
+
 }
 
 
@@ -255,156 +279,34 @@ class HtmlExtensions {
     };
     }
   }
-}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@:using(Html.HtmlExtensions)
-enum Html {
-  A(attribs:Array<Attrib>, children:Array<Html>);
-  Abbr(attribs:Array<Attrib>, children:Array<Html>);
-  Address(attribs:Array<Attrib>, children:Array<Html>);
-  Area(attribs:Array<Attrib>);
-  Article(attribs:Array<Attrib>, children:Array<Html>);
-  Aside(attribs:Array<Attrib>, children:Array<Html>);
-  Audio(attribs:Array<Attrib>, children:Array<Html>);
-  B(attribs:Array<Attrib>, children:Array<Html>);
-  Base(attribs:Array<Attrib>);
-  Bdi(attribs:Array<Attrib>, children:Array<Html>);
-  Bdo(attribs:Array<Attrib>, children:Array<Html>);
-  Blockquote(attribs:Array<Attrib>, children:Array<Html>);
-  Body(attribs:Array<Attrib>, children:Array<Html>);
-  Br(attribs:Array<Attrib>);
-  Button(attribs:Array<Attrib>, children:Array<Html>);
-  Canvas(attribs:Array<Attrib>, children:Array<Html>);
-  Caption(attribs:Array<Attrib>, children:Array<Html>);
-  Cite(attribs:Array<Attrib>, children:Array<Html>);
-  Code(attribs:Array<Attrib>, children:Array<Html>);
-  Col(attribs:Array<Attrib>);
-  Colgroup(attribs:Array<Attrib>, children:Array<Html>);
-  Data(attribs:Array<Attrib>, children:Array<Html>);
-  Datalist(attribs:Array<Attrib>, children:Array<Html>);
-  Dd(attribs:Array<Attrib>, children:Array<Html>);
-  Del(attribs:Array<Attrib>, children:Array<Html>);
-  Details(attribs:Array<Attrib>, children:Array<Html>);
-  Dfn(attribs:Array<Attrib>, children:Array<Html>);
-  Dialog(attribs:Array<Attrib>, children:Array<Html>);
-  Div(attribs:Array<Attrib>, children:Array<Html>);
-  Dl(attribs:Array<Attrib>, children:Array<Html>);
-  Dt(attribs:Array<Attrib>, children:Array<Html>);
-  Em(attribs:Array<Attrib>, children:Array<Html>);
-  Embed(attribs:Array<Attrib>);
-  Fieldset(attribs:Array<Attrib>, children:Array<Html>);
-  Figcaption(attribs:Array<Attrib>, children:Array<Html>);
-  Figure(attribs:Array<Attrib>, children:Array<Html>);
-  Footer(attribs:Array<Attrib>, children:Array<Html>);
-  Form(attribs:Array<Attrib>, children:Array<Html>);
-  H1(attribs:Array<Attrib>, children:Array<Html>);
-  H2(attribs:Array<Attrib>, children:Array<Html>);
-  H3(attribs:Array<Attrib>, children:Array<Html>);
-  H4(attribs:Array<Attrib>, children:Array<Html>);
-  H5(attribs:Array<Attrib>, children:Array<Html>);
-  H6(attribs:Array<Attrib>, children:Array<Html>);
-  Head(attribs:Array<Attrib>, children:Array<Html>);
-  Header(attribs:Array<Attrib>, children:Array<Html>);
-  Hgroup(attribs:Array<Attrib>, children:Array<Html>);
-  Hr(attribs:Array<Attrib>);
-  Html(attribs:Array<Attrib>, children:Array<Html>);
-  I(attribs:Array<Attrib>, children:Array<Html>);
-  Iframe(attribs:Array<Attrib>, children:Array<Html>);
-  Img(attribs:Array<Attrib>);
-  Input(attribs:Array<Attrib>);
-  Ins(attribs:Array<Attrib>, children:Array<Html>);
-  Kbd(attribs:Array<Attrib>, children:Array<Html>);
-  Label(attribs:Array<Attrib>, children:Array<Html>);
-  Legend(attribs:Array<Attrib>, children:Array<Html>);
-  Li(attribs:Array<Attrib>, children:Array<Html>);
-  Link(attribs:Array<Attrib>);
-  Main(attribs:Array<Attrib>, children:Array<Html>);
-  Map(attribs:Array<Attrib>, children:Array<Html>);
-  Mark(attribs:Array<Attrib>, children:Array<Html>);
-  Meta(attribs:Array<Attrib>);
-  Meter(attribs:Array<Attrib>, children:Array<Html>);
-  Nav(attribs:Array<Attrib>, children:Array<Html>);
-  Noscript(attribs:Array<Attrib>, children:Array<Html>);
-  Object(attribs:Array<Attrib>, children:Array<Html>);
-  Ol(attribs:Array<Attrib>, children:Array<Html>);
-  Optgroup(attribs:Array<Attrib>, children:Array<Html>);
-  Option(attribs:Array<Attrib>, children:Array<Html>);
-  Output(attribs:Array<Attrib>, children:Array<Html>);
-  P(attribs:Array<Attrib>, children:Array<Html>);
-  Param(attribs:Array<Attrib>);
-  Picture(attribs:Array<Attrib>, children:Array<Html>);
-  Pre(attribs:Array<Attrib>, children:Array<Html>);
-  Progress(attribs:Array<Attrib>, children:Array<Html>);
-  Q(attribs:Array<Attrib>, children:Array<Html>);
-  Rb(attribs:Array<Attrib>, children:Array<Html>);
-  Rp(attribs:Array<Attrib>, children:Array<Html>);
-  Rt(attribs:Array<Attrib>, children:Array<Html>);
-  Rtc(attribs:Array<Attrib>, children:Array<Html>);
-  Ruby(attribs:Array<Attrib>, children:Array<Html>);
-  S(attribs:Array<Attrib>, children:Array<Html>);
-  Samp(attribs:Array<Attrib>, children:Array<Html>);
-  Script(attribs:Array<Attrib>, children:Array<Html>);
-  Section(attribs:Array<Attrib>, children:Array<Html>);
-  Select(attribs:Array<Attrib>, children:Array<Html>);
-  Small(attribs:Array<Attrib>, children:Array<Html>);
-  Source(attribs:Array<Attrib>);
-  Span(attribs:Array<Attrib>, children:Array<Html>);
-  Strong(attribs:Array<Attrib>, children:Array<Html>);
-  Style(attribs:Array<Attrib>, children:Array<Html>);
-  Sub(attribs:Array<Attrib>, children:Array<Html>);
-  Summary(attribs:Array<Attrib>, children:Array<Html>);
-  Sup(attribs:Array<Attrib>, children:Array<Html>);
-  Table(attribs:Array<Attrib>, children:Array<Html>);
-  Tbody(attribs:Array<Attrib>, children:Array<Html>);
-  Td(attribs:Array<Attrib>, children:Array<Html>);
-  Template(attribs:Array<Attrib>, children:Array<Html>);
-  Textarea(attribs:Array<Attrib>, children:Array<Html>);
-  Text(s:String); // just made up for containing text...
-  Tfoot(attribs:Array<Attrib>, children:Array<Html>);
-  Th(attribs:Array<Attrib>, children:Array<Html>);
-  Thead(attribs:Array<Attrib>, children:Array<Html>);
-  Time(attribs:Array<Attrib>, children:Array<Html>);
-  Title(attribs:Array<Attrib>, children:Array<Html>);
-  Tr(attribs:Array<Attrib>, children:Array<Html>);
-  Track(attribs:Array<Attrib>);
-  U(attribs:Array<Attrib>, children:Array<Html>);
-  Ul(attribs:Array<Attrib>, children:Array<Html>);
-  Var(attribs:Array<Attrib>, children:Array<Html>);
-  Video(attribs:Array<Attrib>, children:Array<Html>);
-  Wbr(attribs:Array<Attrib>);
-}
-
-class HtmlExtensions {
-
-  public static function tagName(html:Html):String {
-    return Type.enumConstructor(html).toLowerCase();
-  }
-
-  public static function realize(elem:Html): js.html.Node {
+  public static function childCount(elem:Html):Int {
     return switch (elem) {
-    case Text(s):
-      js.Browser.document.createTextNode(s);
+    case Elem(_,_,children): children.length;
+    default: 0;
+    };
+  }
 
-    case
+  public static function nthChild(elem:Html, i:Int): Null<Html> {
+    return switch (elem) {
+    case Elem(_,_,children) if (i < children.length): children[i];
+    default: null;
+    };
+  }
+
+  // retturns true if the tags differ, or if the text differs
+  // but doesn't consider children or attributes
+  public static function differsFromNode(thisElem:Html, otherElem:Html) : Bool {
+    return switch ([thisElem, otherElem]) {
+    case [VoidElem(tag1, attrs1), VoidElem(tag1, attrs1)]:  tag1 != tag2;
+    case [TextElem(t1), TextElem(t2)]: t1 != t2;
+    case [Elem(t1,_,_), Elem(t2,_,_)]: t1 != t2;
+    default: false;
+    };
   }
 
 }
+
+
+

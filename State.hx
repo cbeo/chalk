@@ -2,28 +2,35 @@ package;
 
 class ConcreteState<T> {
   public var state(default,null):T;
-  //  var views:Array<View>;
+  var postUpdateActions:Array<Void->Void>;
 
-  function renderViews(s:T) {
-    trace('rendering views...');
-    // for (v in view)
-    //   v.render(); // TODO handle "Err(...)" return values
+  function postUpdate() {
+    for (callback in postUpdateActions) callback();
   }
 
   public function write(tform: StateTransform<T>) {
+    var oldState = state;
     try {
 
-      var newState = tform(state);
-      renderViews(newState);
-      state = newState;
+      state = tform(state);
+      postUpdate();
 
     } catch (e:Dynamic) {
 
       trace('Error on update: $e');
       trace('Restoring from last good state');
-      renderViews(state);
+      state = oldState;
+      postUpdate();
 
     }
+  }
+
+  public function register(callback:Void->Void) {
+    postUpdateActions.push(callback);
+  }
+
+  push function unregister(callback:Void->Void) {
+    postUpdateActions.remove(callback);
   }
 
   public inline function new(t) {
