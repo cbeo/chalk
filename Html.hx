@@ -139,7 +139,8 @@ enum abstract ElemTag(String) to String from String {
 }
 
 enum abstract EventName(String) from String to String {
-  var Click = "click";
+  var OnClick = "click";
+  var OnInput = "input";
 
   @:op(A => B)
   public function setTo(h:EventHandler): Attrib {
@@ -150,6 +151,7 @@ enum abstract EventName(String) from String to String {
 enum abstract AttributeName(String) from String to String {
   var Class = "class";
   var Id = "id";
+  var Value = "value";
 
   @:op(A => B)
   public function setString(s:String) : Attrib {
