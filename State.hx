@@ -12,13 +12,13 @@ class ConcreteState<T> {
     for (callback in postUpdateActions) callback();
   }
 
-  public var read(get,never):T;
+  public var _read_(get,never):T;
 
-  function get_read(): T {
+  function get__read_(): T {
     return state;
   }
 
-  public function write(tform: StateTransform<T>) {
+  public function _write_(tform: StateTransform<T>) {
     var oldState = state;
     try {
 
@@ -58,7 +58,7 @@ class ConcreteState<T> {
   }
 }
 
-@:forward(read,write,register,unregister)
+@:forward(_read_,_write_,register,unregister)
 abstract State<T>(ConcreteState<T>) {
 
   inline public function new(t:T) {
