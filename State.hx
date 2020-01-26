@@ -1,8 +1,12 @@
 package;
 
+import haxe.Constraints;
+
 class ConcreteState<T> {
   var state:T;
   var postUpdateActions:Array<Void->Void> = [];
+
+  public var onTransformError:Function = null;
 
   function postUpdate() {
     for (callback in postUpdateActions) callback();
@@ -24,6 +28,16 @@ class ConcreteState<T> {
     } catch (e:Dynamic) {
 
       trace('Error on update: $e');
+
+      if (onTransformError != null) {
+        trace('Error Handler Exists, Evoking Now');
+
+        try {onTransformError(e);} catch (e2:Dynamic) {
+          trace('Error encountered while attempting to handle state transform error');
+          trace('New Error = $e2');
+        }
+      }
+
       trace('Restoring from last good state');
       state = oldState;
       postUpdate();
