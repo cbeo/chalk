@@ -18,10 +18,9 @@ enum abstract VoidElemTag(String) to String from String {
   var Track = "track";
   var Wbr = "wbr";
 
-  public function attribs(a:Array<Attrib>):Html {
-    return VoidElem(this, a);
+  public function attr(a:Attrib):Html {
+    return VoidElem(this, [a]);
   }
-
 
 }
 
@@ -125,15 +124,11 @@ enum abstract ElemTag(String) to String from String {
   var Var = "var";
   var Video = "video";
   
-  public function attribs(a:Array<Attrib>):Html {
-    return Elem(this, a, []);
-  }
-  
-  public function children(c:Array<Html>):Html {
-    return Elem(this, [], c);
+  public function attr(a:Attrib):Html {
+    return Elem(this, [a], []);
   }
 
-  public function add(c:Html):Html {
+  public function with(c:Html):Html {
     return Elem(this, [], [c]);
   }
 
@@ -143,11 +138,10 @@ enum abstract ElemTag(String) to String from String {
 
 }
 
-
 enum abstract EventName(String) from String to String {
   var Click = "click";
 
-  @:op(A >= B)
+  @:op(A => B)
   public function setTo(h:EventHandler): Attrib {
     return EventHandlerAttribute(this, h);
   }
@@ -157,22 +151,22 @@ enum abstract AttributeName(String) from String to String {
   var Class = "class";
   var Id = "id";
 
-  @:op(A >= B)
+  @:op(A => B)
   public function setString(s:String) : Attrib {
     return ElementAttribute(this, s);
   }
 
-  @:op(A >= B)
+  @:op(A => B)
   public function setInt(i:Int) : Attrib {
     return ElementAttribute(this, Std.string(i));
   }
 
-  @:op(A >= B)
+  @:op(A => B)
   public function setFloat(f:Float) : Attrib {
     return ElementAttribute(this, Std.string(f));
   }
 
-  @:op(A >= B)
+  @:op(A => B)
   public function setBool(b:Bool) : Attrib {
     return ElementAttribute(this, Std.string(b));
   }
@@ -205,19 +199,14 @@ enum Html {
 
 class HtmlExtensions {
 
-  public static function attribs(e:Html, a:Array<Attrib>): Html {
+  public static function attr(e:Html, a:Attrib): Html {
     return switch (e) {
-    case VoidElem(tag, _): VoidElem(tag,a);
-    case Elem(tag, _, children): Elem(tag,a,children);
-    default: throw "TextElem has no attributes";
+    case Elem(_,attribs,_) | VoidElem(_,attribs): {
+      attribs.push(a);
+      e;
     };
-  }
-
-  public static function children(e:Html, c:Array<Html>) : Html {
-    return switch (e) {
-    case Elem(tag,attribs,_): Elem(tag,attribs,c);
-    default: throw "Only Elem has children";
-    };
+    default: throw "TextNodes have no attribues";
+    }
   }
 
   public static function withText(e:Html, s:String) : Html {
@@ -231,7 +220,7 @@ class HtmlExtensions {
     };
   }
 
-  public static function add(e:Html, c:Html) : Html {
+  public static function with(e:Html, c:Html) : Html {
     return switch (e) {
     case Elem(_,_,children): {
       children.push(c);
@@ -240,7 +229,6 @@ class HtmlExtensions {
     default: throw "Only Elem has children";
     }
   }
-
 
   public static function realize (elem:Html) : js.html.Node {
     switch (elem) {
