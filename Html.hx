@@ -181,17 +181,19 @@ enum Attrib {
 // TODO: do I need a Boolean case too?
 class AttribExtensions {
 
-  public static function realizeOn(attrib:Attrib, node: js.html.Element) {
+  public static function realizeOn(attrib:Attrib, node: js.html.Node) {
+    var node : js.html.Element = (cast node);
     switch (attrib) {
     case EventHandlerAttribute(event, handler): node.addEventListener(event, handler);
     case ElementAttribute(name, value): node.setAttribute(name, value);
     }
   }
 
-  public static function removeFrom(attrib:Attrib, node: js.html.Elment) {
+  public static function removeFrom(attrib:Attrib, node: js.html.Node) {
+    var node : js.html.Element = (cast node);
     switch (attrib) {
     case EventHandlerAttribute(event,handler): node.removeEventListener(event, handler);
-    case ElementAttribute(name,_): node.removeAttribute(name)
+    case ElementAttribute(name,_): node.removeAttribute(name);
     }
   }
 
@@ -299,10 +301,17 @@ class HtmlExtensions {
   // but doesn't consider children or attributes
   public static function differsFromNode(thisElem:Html, otherElem:Html) : Bool {
     return switch ([thisElem, otherElem]) {
-    case [VoidElem(tag1, attrs1), VoidElem(tag1, attrs1)]:  tag1 != tag2;
+    case [VoidElem(tag1, attrs1), VoidElem(tag2, attrs2)]:  tag1 != tag2;
     case [TextElem(t1), TextElem(t2)]: t1 != t2;
     case [Elem(t1,_,_), Elem(t2,_,_)]: t1 != t2;
     default: false;
+    };
+  }
+
+  public static function getAttributes(elem:Html): Array<Attrib> {
+    return switch (elem) {
+    case VoidElem(_,a)| Elem(_,a,_): a;
+    default: [];
     };
   }
 

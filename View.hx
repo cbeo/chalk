@@ -1,13 +1,23 @@
 package;
 
-import js.html.Element;
+import js.html.Node;
 import Html.*;
 
 using Lambda;
 
+
+// abstract ElementById(Element) from Element to Element {
+//   inline function new(e) {this = e;}
+
+//   @:from
+//   public static function fromString(s:String) : ElementById {
+//     return js.Browser.document.getElementById( s );
+//   }
+// }
+
 class View<T> {
 
-  private static function updateAttributes(dom:Element, oldElem: Html, newElem: Html) {
+  private static function updateAttributes(dom:Node, oldElem: Html, newElem: Html) {
     var oldAttribs = oldElem.getAttributes();
     var newAttribs = newElem.getAttributes();
     // remove old attribs that are absent in the new element
@@ -21,23 +31,23 @@ class View<T> {
         attrib.realizeOn( dom );
   }
 
-  private static function updateDom(parent : Element, ?oldElem: Html,  ?newElem: Html, ?index = 0) {
+  private static function updateDom(parent : Node, ?oldElem: Html,  ?newElem: Html, ?index = 0) {
     var child = parent.childNodes.item( index );
 
     if ( oldElem == null ) 
       parent.appendChild( newElem.realize() );
 
     else if ( newElem == null )
-      return parent.removeChild( child );
+      parent.removeChild( child );
 
     else if ( newElem.differsFromNode( oldElem ) ) 
       parent.replaceChild( newElem.realize(), child );
 
     else {
       updateAttributes(child, oldElem, newElem);
-      var childCount = Math.max(oldElem.childCount(), newElem.childCount());
+      var childCount = Std.int(Math.max(oldElem.childCount(), newElem.childCount()));
       childCount--;
-      for (i in 0...childCount)
+      for (i in 0 ... childCount)
         updateDom(child,
                   oldElem.nthChild( childCount - i),
                   newElem.nthChild( childCount - i),
@@ -47,7 +57,7 @@ class View<T> {
 
 
   final model:State<T>;
-  var root: Element;
+  var root: Node;
   var currentVirtual: Html;
 
   final function updateView () {
@@ -61,9 +71,12 @@ class View<T> {
     return null;
   }
 
-  public function new(m:State<T>) {
+  public function new(m:State<T>, r: Node) {
     model = m;
+    currentVirtual = render();
     m.register( updateView );
+    root = r;
+    updateDom(root, null, currentVirtual);
   }
 }
 

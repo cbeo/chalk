@@ -29,7 +29,7 @@ class ConcreteState<T> {
     postUpdateActions.push(callback);
   }
 
-  push function unregister(callback:Void->Void) {
+  public function unregister(callback:Void->Void) {
     postUpdateActions.remove(callback);
   }
 
@@ -38,7 +38,7 @@ class ConcreteState<T> {
   }
 }
 
-@:forward(read,write,state)
+@:forward(read,write,state,register,unregister)
 abstract State<T>(ConcreteState<T>) {
 
   inline public function new(t:T) {
