@@ -34,24 +34,21 @@ class View<T> {
   private static function updateDom(parent : Node, ?oldElem: Html,  ?newElem: Html, ?index = 0) {
     var child = parent.childNodes.item( index );
 
-    if ( oldElem == null ) 
+    if ( oldElem == null ) {
       parent.appendChild( newElem.realize() );
-
-    else if ( newElem == null )
+    } else if ( newElem == null ) {
       parent.removeChild( child );
-
-    else if ( newElem.differsFromNode( oldElem ) ) 
+    } else if ( newElem.differsFromNode( oldElem ) )  {
       parent.replaceChild( newElem.realize(), child );
-
-    else {
+    }  else {
       updateAttributes(child, oldElem, newElem);
       var childCount = Std.int(Math.max(oldElem.childCount(), newElem.childCount()));
-      childCount--;
+      childCount;
       for (i in 0 ... childCount)
         updateDom(child,
-                  oldElem.nthChild( childCount - i),
-                  newElem.nthChild( childCount - i),
-                  childCount - i);
+                  oldElem.nthChild( (childCount - 1) - i),
+                  newElem.nthChild( (childCount - 1) - i),
+                  (childCount - 1) - i);
     }
   }
 

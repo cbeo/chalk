@@ -2,7 +2,7 @@ package;
 
 class ConcreteState<T> {
   public var state(default,null):T;
-  var postUpdateActions:Array<Void->Void>;
+  var postUpdateActions:Array<Void->Void> = [];
 
   function postUpdate() {
     for (callback in postUpdateActions) callback();
