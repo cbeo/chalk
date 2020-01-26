@@ -22,6 +22,10 @@ enum abstract VoidElemTag(String) to String from String {
     return VoidElem(this, [a]);
   }
 
+  inline public function elem():Html {
+    return VoidElem(this,[]);
+  }
+
 }
 
 enum abstract ElemTag(String) to String from String {
@@ -132,8 +136,16 @@ enum abstract ElemTag(String) to String from String {
     return Elem(this, [], [c]);
   }
 
+  inline public function withAll(cs:Array<Html>):Html {
+    return Elem(this, [], cs);
+  }
+
   inline public function withText(s:String):Html {
     return Elem(this, [], [TextElem(s)]);
+  }
+
+  inline public function elem():Html {
+    return Elem(this,[],[]);
   }
 
 }
@@ -278,6 +290,16 @@ class HtmlExtensions {
     return switch (e) {
     case Elem(_,_,children): {
       children.push(c);
+      e;
+    };
+    default: throw "Only Elem has children";
+    }
+  }
+
+  public static function withAll(e:Html, cs:Array<Html>) : Html {
+    return switch (e) {
+    case Elem(_,_,children): {
+      for (c in cs) children.push(c);
       e;
     };
     default: throw "Only Elem has children";
