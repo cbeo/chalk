@@ -18,7 +18,7 @@ enum abstract VoidElemTag(String) to String from String {
   var Track = "track";
   var Wbr = "wbr";
 
-  public function attr(a:Attrib):Html {
+  inline public function attr(a:Attrib):Html {
     return VoidElem(this, [a]);
   }
 
@@ -124,26 +124,46 @@ enum abstract ElemTag(String) to String from String {
   var Var = "var";
   var Video = "video";
   
-  public function attr(a:Attrib):Html {
+  inline public function attr(a:Attrib):Html {
     return Elem(this, [a], []);
   }
 
-  public function with(c:Html):Html {
+  inline public function with(c:Html):Html {
     return Elem(this, [], [c]);
   }
 
-  public function withText(s:String):Html {
+  inline public function withText(s:String):Html {
     return Elem(this, [], [TextElem(s)]);
   }
 
 }
 
 enum abstract EventName(String) from String to String {
+  var OnBlur = "blur";
   var OnClick = "click";
+  var OnClose = "close";
+  var OnError = "error";
+  var OnFocus = "focus";
   var OnInput = "input";
+  var OnKeyDown = "keydown";
+  var OnKeyPress = "keypress";
+  var OnKeyUp =  "keyup";
+  var OnMessage = "message";
+  var OnMouseDown = "mousedown";
+  var OnMouseEnter = "mouseenter";
+  var OnMouseLeave = "mouseleave";
+  var OnMouseMove = "mousemove";
+  var OnMouseOut = "mouseout";
+  var OnMouseUp = "mouseup";
+  var OnOpen = "open";
+  var OnResize = "resize";
+  var OnScroll = "scroll";
+  var OnSelect = "select";
+  var OnSubmit = "submit";
+  var OnWheel = "wheel";
 
   @:op(A => B)
-  public function setTo(h:EventHandler): Attrib {
+  inline public function setTo(h:EventHandler): Attrib {
     return EventHandlerAttribute(this, h);
   }
 }
@@ -152,24 +172,30 @@ enum abstract AttributeName(String) from String to String {
   var Class = "class";
   var Id = "id";
   var Value = "value";
+  var Action = "action";
+  var Href = "href";
+  var Method = "method";
+  var Placeholder = "placeholder";
+  var Src = "src";
+  var Title = "title";
 
   @:op(A => B)
-  public function setString(s:String) : Attrib {
+  inline public function setString(s:String) : Attrib {
     return ElementAttribute(this, s);
   }
 
   @:op(A => B)
-  public function setInt(i:Int) : Attrib {
+  inline public function setInt(i:Int) : Attrib {
     return ElementAttribute(this, Std.string(i));
   }
 
   @:op(A => B)
-  public function setFloat(f:Float) : Attrib {
+  inline public function setFloat(f:Float) : Attrib {
     return ElementAttribute(this, Std.string(f));
   }
 
   @:op(A => B)
-  public function setBool(b:Bool) : Attrib {
+  inline public function setBool(b:Bool) : Attrib {
     return ElementAttribute(this, Std.string(b));
   }
 }
