@@ -1,11 +1,17 @@
 package;
 
 class ConcreteState<T> {
-  public var state(default,null):T;
+  var state:T;
   var postUpdateActions:Array<Void->Void> = [];
 
   function postUpdate() {
     for (callback in postUpdateActions) callback();
+  }
+
+  public var read(get,never):T;
+
+  function get_read(): T {
+    return state;
   }
 
   public function write(tform: StateTransform<T>) {
@@ -38,7 +44,7 @@ class ConcreteState<T> {
   }
 }
 
-@:forward(read,write,state,register,unregister)
+@:forward(read,write,register,unregister)
 abstract State<T>(ConcreteState<T>) {
 
   inline public function new(t:T) {
