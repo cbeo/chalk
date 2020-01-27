@@ -1,7 +1,7 @@
 package;
 
 class DomUtils {
-
+ 
   public static function query<E:js.html.Node>(q:String):E {
     return cast js.Browser.document.querySelector(q);
   }
