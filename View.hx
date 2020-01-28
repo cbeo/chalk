@@ -5,16 +5,6 @@ import Html.*;
 
 using Lambda;
 
-
-// abstract ElementById(Element) from Element to Element {
-//   inline function new(e) {this = e;}
-
-//   @:from
-//   public static function fromString(s:String) : ElementById {
-//     return js.Browser.document.getElementById( s );
-//   }
-// }
-
 class View<T> {
 
   private static function updateAttributes(dom:Node, oldElem: Html, newElem: Html) {
