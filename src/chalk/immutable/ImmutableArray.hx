@@ -1,4 +1,4 @@
-package chalk;
+package chalk.immutable;
 
 @:forward(iterator, filter, map)
 abstract ImmutableArray<T>(Array<T>) from Array<T> to Array<T> {

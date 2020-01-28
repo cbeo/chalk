@@ -1,4 +1,4 @@
-package chalk;
+package chalk.immutable;
 
 import haxe.Constraints;
 
