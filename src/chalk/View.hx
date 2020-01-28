@@ -43,7 +43,7 @@ class View<T> {
   }
 
 
-  final model:State<T>;
+  final model:Model<T>;
   var root: Node;
   var currentVirtual: Html;
 
@@ -58,7 +58,7 @@ class View<T> {
     return null;
   }
 
-  public function new(m:State<T>, r: Node) {
+  public function new(m:Model<T>, r: Node) {
     model = m;
     currentVirtual = render();
     m.register( updateView );

@@ -60,7 +60,7 @@ class ConcreteState<T> {
 }
 
 @:forward(_read_,_write_,register,unregister)
-abstract State<T>(ConcreteState<T>) {
+abstract Model<T>(ConcreteState<T>) {
 
   inline public function new(t:T) {
     this = new ConcreteState(t);
@@ -68,7 +68,7 @@ abstract State<T>(ConcreteState<T>) {
 
   @:from
   static public function from<T>(t:T) {
-    return new State(t);
+    return new Model(t);
   }
 
   @:op(a.b)
