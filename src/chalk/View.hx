@@ -30,9 +30,9 @@ class View<T> {
       parent.removeChild( child );
     } else if ( newElem.differsFromNode( oldElem ) )  {
       parent.replaceChild( newElem.realize(), child );
-    }  else {
-      updateAttributes(child, oldElem, newElem);
-      var childCount = Std.int(Math.max(oldElem.childCount(), newElem.childCount()));
+    } else {
+      updateAttributes( child, oldElem, newElem );
+      var childCount = Std.int( Math.max( oldElem.childCount(), newElem.childCount() ));
       childCount;
       for (i in 0 ... childCount)
         updateDom(child,
@@ -49,7 +49,9 @@ class View<T> {
 
   final function updateView () {
     var newVirtual = render();
-    updateDom(root, currentVirtual, newVirtual);
+    if (root != null) {
+      updateDom(root, currentVirtual, newVirtual);
+    }
     currentVirtual = newVirtual;
   }
 
@@ -58,12 +60,27 @@ class View<T> {
     return null;
   }
 
-  public function new(m:Model<T>, r: Node) {
+  public function attach( r: Node) {
+    detatch();
+    root = r;
+    updateDom( root, null, currentVirtual );
+  }
+
+  public function detatch() {
+    if (root != null) 
+      while ( root.firstChild != null )
+        root.removeChild( root.firstChild );
+  }
+
+  public function new(m:Model<T>, ?r: Node) {
     model = m;
     currentVirtual = render();
     m.register( updateView );
-    root = r;
-    updateDom(root, null, currentVirtual);
+
+    if (r != null) {
+      root = r;
+      updateDom( root, null, currentVirtual );
+    }
   }
 }
 
