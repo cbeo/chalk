@@ -1,4 +1,4 @@
-package;
+package chalk;
 
 typedef EventHandler = (e:js.html.Event) -> Void;
 

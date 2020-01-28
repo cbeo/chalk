@@ -1,7 +1,7 @@
-package;
+package chalk;
 
 import js.html.Node;
-import Html.*;
+import chalk.Html.*;
 
 using Lambda;
 

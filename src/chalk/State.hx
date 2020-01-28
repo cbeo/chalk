@@ -1,6 +1,7 @@
-package;
+package chalk;
 
 import haxe.Constraints;
+import chalk.StateTransform;
 
 class ConcreteState<T> {
   var state:T;

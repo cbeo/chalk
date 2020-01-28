@@ -1,7 +1,6 @@
-package;
+package chalk;
 
 import haxe.Constraints;
-//import haxe.ds.Map;
 
 typedef KeyVal<K,V> = {key:K,value:V};
 

@@ -1,0 +1,12 @@
+{
+    "name": "chalk",
+    "url":"",
+    "license": "",
+    "tags": ["frontend","js"],
+    "description": "A small, knowable, frontend library.",
+    "version": "0.0.1",
+    "classPath": "src",
+    "releasenote": "pre-release",
+    "contributors":["cbeo"],
+    "dependencies": {}
+}

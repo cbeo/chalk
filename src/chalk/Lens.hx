@@ -1,4 +1,6 @@
-package;
+package chalk;
+
+import chalk.StateTransform;
 
 typedef LensType<T,F> =
   { get : (record:T) -> F,

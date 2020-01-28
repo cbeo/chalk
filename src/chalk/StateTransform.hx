@@ -1,4 +1,4 @@
-package;
+package chalk;
 
 typedef StateTransformType<T> = T -> T;
 
