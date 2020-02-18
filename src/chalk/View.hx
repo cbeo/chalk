@@ -62,7 +62,10 @@ class View<T> {
 
   public function attach( r: Node) {
     detatch();
-    root = r;
+      root = r;
+      while (root.lastChild != null)
+          root.removeChild(root.lastChild);
+
     updateDom( root, null, currentVirtual );
   }
 
