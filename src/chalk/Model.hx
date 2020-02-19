@@ -46,6 +46,10 @@ class ConcreteState<T> {
     }
   }
 
+    public function export():T {
+        return Reflect.copy(state);
+    }
+
   public function register(callback:Void->Void) {
     postUpdateActions.push(callback);
   }
@@ -59,7 +63,7 @@ class ConcreteState<T> {
   }
 }
 
-@:forward(_read_,_write_,register,unregister)
+@:forward(_read_,_write_,register,unregister,export)
 abstract Model<T>(ConcreteState<T>) {
 
   inline public function new(t:T) {
