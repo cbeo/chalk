@@ -4,58 +4,58 @@ import haxe.Constraints;
 import chalk.StateTransform;
 
 class ConcreteState<T> {
-  var state:T;
-  var postUpdateActions:Array<Void->Void> = [];
+    var state:T;
+    var updateEffectActions:Array<?T->Void> = [];
 
-  public var onTransformError:Function = null;
+    public var onTransformError:Function = null;
 
-  function postUpdate() {
-    for (callback in postUpdateActions) callback();
-  }
-
-  public var _read_(get,never):T;
-
-  function get__read_(): T {
-    return state;
-  }
-
-  public function _write_(tform: StateTransform<T>) {
-    var oldState = state;
-    try {
-
-      state = tform(state);
-      postUpdate();
-
-    } catch (e:Dynamic) {
-
-      trace('Error on update: $e');
-
-      if (onTransformError != null) {
-        trace('Error Handler Exists, Evoking Now');
-
-        try {onTransformError(e);} catch (e2:Dynamic) {
-          trace('Error encountered while attempting to handle state transform error');
-          trace('New Error = $e2');
-        }
-      }
-
-      trace('Restoring from last good state');
-      state = oldState;
-      postUpdate();
-
+    function updateEffect(?oldState:T) {
+        for (callback in updateEffectActions) callback( oldState );
     }
-  }
+
+    public var _read_(get,never):T;
+
+    function get__read_(): T {
+        return state;
+    }
+
+    public function _write_(tform: StateTransform<T>) {
+        var oldState = state;
+        try {
+
+            state = tform(state);
+            updateEffect( oldState );
+
+        } catch (e:Dynamic) {
+
+            trace('Error on update: $e');
+
+            if (onTransformError != null) {
+                trace('Error Handler Exists, Evoking Now');
+
+                try {onTransformError(e);} catch (e2:Dynamic) {
+                    trace('Error encountered while attempting to handle state transform error');
+                    trace('New Error = $e2');
+                }
+            }
+
+            trace('Restoring from last good state');
+            state = oldState;
+            updateEffect();
+
+        }
+    }
 
     public function export():T {
         return Reflect.copy(state);
     }
 
-  public function register(callback:Void->Void) {
-    postUpdateActions.push(callback);
+  public function register(callback:?T->Void) {
+    updateEffectActions.push(callback);
   }
 
-  public function unregister(callback:Void->Void) {
-    postUpdateActions.remove(callback);
+  public function unregister(callback:?T->Void) {
+    updateEffectActions.remove(callback);
   }
 
   public inline function new(t) {

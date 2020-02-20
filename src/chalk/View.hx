@@ -43,31 +43,31 @@ class View<T> {
   }
 
 
-  final model:Model<T>;
-  var root: Node;
-  var currentVirtual: Html;
+    final model:Model<T>;
+    var root: Node;
+    var currentVirtual: Html;
 
-  final function updateView () {
-    var newVirtual = render();
-    if (root != null) {
-      updateDom(root, currentVirtual, newVirtual);
+    final function updateView (?oldState: T) {
+        var newVirtual = render();
+        if (root != null) {
+            updateDom(root, currentVirtual, newVirtual);
+        }
+        currentVirtual = newVirtual;
     }
-    currentVirtual = newVirtual;
-  }
 
   public function render() : Html {
     throw "Must Implement";
     return null;
   }
 
-  public function attach( r: Node) {
-    detatch();
-      root = r;
-      while (root.lastChild != null)
-          root.removeChild(root.lastChild);
+    public function attach( r: Node) {
+        detatch();
+        root = r;
+        while (root.lastChild != null)
+            root.removeChild(root.lastChild);
 
-    updateDom( root, null, currentVirtual );
-  }
+        updateDom( root, null, currentVirtual );
+    }
 
   public function detatch() {
     if (root != null) 
