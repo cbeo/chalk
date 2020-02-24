@@ -50,6 +50,10 @@ class ConcreteState<T> {
         return Reflect.copy(state);
     }
 
+    public function replace(val:T) {
+        this.state = val;
+    }
+
   public function register(callback:?T->Void) {
     updateEffectActions.push(callback);
   }
@@ -63,7 +67,7 @@ class ConcreteState<T> {
   }
 }
 
-@:forward(_read_,_write_,register,unregister,export)
+@:forward(_read_,_write_,register,unregister,export,replace)
 abstract Model<T>(ConcreteState<T>) {
 
   inline public function new(t:T) {
